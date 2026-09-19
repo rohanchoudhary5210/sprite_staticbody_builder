@@ -1,0 +1,42 @@
+# Godot 4+ specific ignores
+.godot/
+*.translation
+*.tmp
+
+# Imported resources cache (local cache)
+.import/
+
+# Mono / C# specific ignores
+.mono/
+data_*/
+mono_crash.*.json
+[Bb]in/
+[Oo]bj/
+
+# Crash logs and editor exports
+crash.*.log
+/export/
+/build/
+*.pck
+*.apk
+*.aab
+*.exe
+*.zip
+
+# Operating System specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+*.directory
+
+# IDE & Editor specific files
+.vscode/
+.idea/
+*.swp
+*~
+*.bak
