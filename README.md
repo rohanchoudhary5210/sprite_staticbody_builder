@@ -209,5 +209,7 @@ addons/sprite_staticbody_builder/
 ---
 
 ## 📄 License & Attribution
+- **Author**: Rohan Choudhary
+- **License**: MIT License
 
-This project is open-source software licensed under the **MIT License**. Feel free to use, modify, and integrate it into commercial and personal games.
+This project is open-source software licensed under the **MIT License** (see [LICENSE](LICENSE)). Feel free to use, modify, and integrate it into commercial and personal games.
