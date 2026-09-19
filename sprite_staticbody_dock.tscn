@@ -1,0 +1,424 @@
+[gd_scene load_steps=2 format=3 uid="uid://b7vyk8n2001st"]
+
+[ext_resource type="Script" path="res://addons/sprite_staticbody_builder/sprite_staticbody_dock.gd" id="1_dock"]
+
+[node name="SpriteStaticBodyDock" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_dock")
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="MainVBox" type="VBoxContainer" parent="Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="TitleBox" type="HBoxContainer" parent="Scroll/MainVBox"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="Scroll/MainVBox/TitleBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "🛠️ Sprite StaticBody Builder"
+
+[node name="HSeparator1" type="HSeparator" parent="Scroll/MainVBox"]
+layout_mode = 2
+
+[node name="TargetSection" type="VBoxContainer" parent="Scroll/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="SectionLabel" type="Label" parent="Scroll/MainVBox/TargetSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.8, 1)
+theme_override_font_sizes/font_size = 11
+text = "SELECTED SPRITE / TEXTURE"
+
+[node name="TargetCard" type="PanelContainer" parent="Scroll/MainVBox/TargetSection"]
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="Scroll/MainVBox/TargetSection/TargetCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TargetIcon" type="TextureRect" parent="Scroll/MainVBox/TargetSection/TargetCard/HBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBox" type="VBoxContainer" parent="Scroll/MainVBox/TargetSection/TargetCard/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TargetLabel" type="Label" parent="Scroll/MainVBox/TargetSection/TargetCard/HBox/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "No Sprite2D selected"
+
+[node name="TargetInfoLabel" type="Label" parent="Scroll/MainVBox/TargetSection/TargetCard/HBox/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.65, 0.7, 1)
+theme_override_font_sizes/font_size = 10
+text = "Select a Sprite2D or texture"
+autowrap_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Scroll/MainVBox"]
+layout_mode = 2
+
+[node name="CollisionSection" type="VBoxContainer" parent="Scroll/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ColLabel" type="Label" parent="Scroll/MainVBox/CollisionSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.8, 1)
+theme_override_font_sizes/font_size = 11
+text = "COLLISION PARAMETERS"
+
+[node name="AlphaBox" type="VBoxContainer" parent="Scroll/MainVBox/CollisionSection"]
+layout_mode = 2
+
+[node name="AlphaHeader" type="HBoxContainer" parent="Scroll/MainVBox/CollisionSection/AlphaBox"]
+layout_mode = 2
+
+[node name="AlphaLabel" type="Label" parent="Scroll/MainVBox/CollisionSection/AlphaBox/AlphaHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "Alpha Threshold:"
+
+[node name="AlphaSpin" type="SpinBox" parent="Scroll/MainVBox/CollisionSection/AlphaBox/AlphaHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+value = 0.5
+
+[node name="AlphaSlider" type="HSlider" parent="Scroll/MainVBox/CollisionSection/AlphaBox"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 0.5
+
+[node name="SimplBox" type="HBoxContainer" parent="Scroll/MainVBox/CollisionSection"]
+layout_mode = 2
+
+[node name="SimplLabel" type="Label" parent="Scroll/MainVBox/CollisionSection/SimplBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "Simplification:"
+
+[node name="SimplOption" type="OptionButton" parent="Scroll/MainVBox/CollisionSection/SimplBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CustomEpsBox" type="HBoxContainer" parent="Scroll/MainVBox/CollisionSection"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="CustomEpsLabel" type="Label" parent="Scroll/MainVBox/CollisionSection/CustomEpsBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "Custom Epsilon:"
+
+[node name="CustomEpsSpin" type="SpinBox" parent="Scroll/MainVBox/CollisionSection/CustomEpsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 0.1
+max_value = 50.0
+step = 0.1
+value = 2.5
+
+[node name="MaxPtsBox" type="HBoxContainer" parent="Scroll/MainVBox/CollisionSection"]
+layout_mode = 2
+
+[node name="MaxPtsLabel" type="Label" parent="Scroll/MainVBox/CollisionSection/MaxPtsBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "Max Points:"
+
+[node name="MaxPointsSpin" type="SpinBox" parent="Scroll/MainVBox/CollisionSection/MaxPtsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 4.0
+max_value = 512.0
+value = 64.0
+
+[node name="ColModeBox" type="HBoxContainer" parent="Scroll/MainVBox/CollisionSection"]
+layout_mode = 2
+
+[node name="ColModeLabel" type="Label" parent="Scroll/MainVBox/CollisionSection/ColModeBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "Collision Mode:"
+
+[node name="CollisionModeOption" type="OptionButton" parent="Scroll/MainVBox/CollisionSection/ColModeBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BuildModeBox" type="HBoxContainer" parent="Scroll/MainVBox/CollisionSection"]
+layout_mode = 2
+
+[node name="BuildModeLabel" type="Label" parent="Scroll/MainVBox/CollisionSection/BuildModeBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "Build Mode:"
+
+[node name="BuildModeOption" type="OptionButton" parent="Scroll/MainVBox/CollisionSection/BuildModeBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HSeparator3" type="HSeparator" parent="Scroll/MainVBox"]
+layout_mode = 2
+
+[node name="PresetSection" type="VBoxContainer" parent="Scroll/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="PresetLabel" type="Label" parent="Scroll/MainVBox/PresetSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.8, 1)
+theme_override_font_sizes/font_size = 11
+text = "GAMEPLAY PRESETS"
+
+[node name="PresetOption" type="OptionButton" parent="Scroll/MainVBox/PresetSection"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RotSpeedBox" type="HBoxContainer" parent="Scroll/MainVBox/PresetSection"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="RotSpeedLabel" type="Label" parent="Scroll/MainVBox/PresetSection/RotSpeedBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "Rotation Speed (°/s):"
+
+[node name="RotSpeedSpin" type="SpinBox" parent="Scroll/MainVBox/PresetSection/RotSpeedBox"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = -360.0
+max_value = 360.0
+value = 45.0
+
+[node name="HSeparator4" type="HSeparator" parent="Scroll/MainVBox"]
+layout_mode = 2
+
+[node name="ShadowSection" type="VBoxContainer" parent="Scroll/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ShadowLabel" type="Label" parent="Scroll/MainVBox/ShadowSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.8, 1)
+theme_override_font_sizes/font_size = 11
+text = "REAL SHADOW SPRITE"
+
+[node name="AddShadowCheck" type="CheckBox" parent="Scroll/MainVBox/ShadowSection"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Generate Real Shadow Sprite"
+
+[node name="ShadowControlsBox" type="VBoxContainer" parent="Scroll/MainVBox/ShadowSection"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ShadowAnchorBox" type="HBoxContainer" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox"]
+layout_mode = 2
+
+[node name="ShadowAnchorLabel" type="Label" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox/ShadowAnchorBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "Shadow Origin / Anchor:"
+
+[node name="ShadowAnchorOption" type="OptionButton" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox/ShadowAnchorBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ShadowOffsetBox" type="HBoxContainer" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox"]
+layout_mode = 2
+
+[node name="ShadowOffsetLabel" type="Label" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox/ShadowOffsetBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "Offset (X, Y):"
+
+[node name="ShadowOffsetXSpin" type="SpinBox" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox/ShadowOffsetBox"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = -500.0
+max_value = 500.0
+value = 6.0
+
+[node name="ShadowOffsetYSpin" type="SpinBox" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox/ShadowOffsetBox"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = -500.0
+max_value = 500.0
+value = 8.0
+
+[node name="ShadowAngleDistBox" type="HBoxContainer" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox"]
+layout_mode = 2
+
+[node name="ShadowAngleDistLabel" type="Label" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox/ShadowAngleDistBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "Light Angle / Distance:"
+
+[node name="ShadowAngleSpin" type="SpinBox" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox/ShadowAngleDistBox"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 0.0
+max_value = 360.0
+step = 0.5
+value = 53.1
+suffix = "°"
+
+[node name="ShadowDistSpin" type="SpinBox" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox/ShadowAngleDistBox"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 0.0
+max_value = 500.0
+step = 0.5
+value = 10.0
+suffix = "px"
+
+[node name="ShadowColorBox" type="HBoxContainer" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox"]
+layout_mode = 2
+
+[node name="ShadowColorLabel" type="Label" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox/ShadowColorBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "Shadow Color / Alpha:"
+
+[node name="ShadowColorPicker" type="ColorPickerButton" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox/ShadowColorBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0, 0, 0, 0.45)
+edit_alpha = true
+
+[node name="ShadowScaleBox" type="HBoxContainer" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox"]
+layout_mode = 2
+
+[node name="ShadowScaleLabel" type="Label" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox/ShadowScaleBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "Shadow Scale:"
+
+[node name="ShadowScaleSpin" type="SpinBox" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox/ShadowScaleBox"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 0.1
+max_value = 3.0
+step = 0.05
+value = 1.0
+
+[node name="RealtimeShadowCheck" type="CheckBox" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Realtime Rotation Sync"
+tooltip_text = "Keeps shadow offset locked to world light direction in real-time when body rotates"
+
+[node name="HSeparator5" type="HSeparator" parent="Scroll/MainVBox"]
+layout_mode = 2
+
+[node name="OptionsSection" type="VBoxContainer" parent="Scroll/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="OptionsLabel" type="Label" parent="Scroll/MainVBox/OptionsSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.8, 1)
+theme_override_font_sizes/font_size = 11
+text = "OPTIONS"
+
+[node name="CreateBodyCheck" type="CheckBox" parent="Scroll/MainVBox/OptionsSection"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Create StaticBody2D"
+
+[node name="KeepSpriteCheck" type="CheckBox" parent="Scroll/MainVBox/OptionsSection"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Keep original Sprite2D"
+
+[node name="AutoColCheck" type="CheckBox" parent="Scroll/MainVBox/OptionsSection"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Generate collision automatically"
+
+[node name="HSeparator5" type="HSeparator" parent="Scroll/MainVBox"]
+layout_mode = 2
+
+[node name="ActionsSection" type="VBoxContainer" parent="Scroll/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CreateBtn" type="Button" parent="Scroll/MainVBox/ActionsSection"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 1, 0.9, 1)
+text = "🔨 Create StaticBody"
+
+[node name="RegenBtn" type="Button" parent="Scroll/MainVBox/ActionsSection"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "🔄 Regenerate Collision"
+
+[node name="PreviewBtn" type="Button" parent="Scroll/MainVBox/ActionsSection"]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+text = "👁️ Preview Collision"
+
+[node name="RemoveBtn" type="Button" parent="Scroll/MainVBox/ActionsSection"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.7, 0.7, 1)
+text = "🗑️ Remove Collision"
+
+[node name="StatusLabel" type="Label" parent="Scroll/MainVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.8, 0.9, 1)
+theme_override_font_sizes/font_size = 11
+text = "Ready"
+autowrap_mode = 2
