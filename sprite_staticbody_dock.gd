@@ -33,6 +33,12 @@ var _syncing_shadow_controls: bool = false
 @onready var preset_option: OptionButton = %PresetOption
 @onready var rot_speed_box: HBoxContainer = %RotSpeedBox
 @onready var rot_speed_spin: SpinBox = %RotSpeedSpin
+@onready var bumper_box: HBoxContainer = %BumperBox
+@onready var bounce_force_spin: SpinBox = %BounceForceSpin
+@onready var star_box: HBoxContainer = %StarBox
+@onready var star_index_spin: SpinBox = %StarIndexSpin
+@onready var key_door_box: HBoxContainer = %KeyDoorBox
+@onready var key_id_edit: LineEdit = %KeyIdEdit
 
 @onready var add_shadow_check: CheckBox = %AddShadowCheck
 @onready var shadow_controls_box: VBoxContainer = %ShadowControlsBox
@@ -83,9 +89,15 @@ func _setup_ui() -> void:
 		
 	if preset_option and preset_option.item_count == 0:
 		preset_option.add_item("🧱 Static Wall / Platform")
-		preset_option.add_item("🌀 Rotating Maze / Obstacle")
+		preset_option.add_item("🌀 Rotating Obstacle / Spinner")
 		preset_option.add_item("⚠️ Hazard / Trap")
 		preset_option.add_item("🏁 Goal / Checkered Flag")
+		preset_option.add_item("🦘 Bumper / Spring Pad")
+		preset_option.add_item("🛡️ One-Way Jelly Membrane")
+		preset_option.add_item("🌀 Teleport Portal")
+		preset_option.add_item("⭐ Collectible Star / Gem")
+		preset_option.add_item("🔑 Key Pickup")
+		preset_option.add_item("🚪 Locked Door")
 		preset_option.select(0)
 
 	# Connect Value syncs
@@ -115,16 +127,23 @@ func _setup_ui() -> void:
 			custom_eps_box.visible = (simpl_option.selected == 3)
 			
 	if preset_option:
-		preset_option.item_selected.connect(func(idx):
-			if rot_speed_box:
-				rot_speed_box.visible = (idx == 1)
+		var on_preset_selected = func(idx):
+			if rot_speed_box: rot_speed_box.visible = (idx == 1)
+			if bumper_box: bumper_box.visible = (idx == 4)
+			if star_box: star_box.visible = (idx == 7)
+			if key_door_box: key_door_box.visible = (idx == 8 or idx == 9)
 			_on_settings_modified()
-		)
-		if rot_speed_box:
-			rot_speed_box.visible = (preset_option.selected == 1)
-			
-	if custom_eps_spin:
-		custom_eps_spin.value_changed.connect(func(_val): _on_settings_modified())
+		preset_option.item_selected.connect(on_preset_selected)
+		on_preset_selected.call(preset_option.selected)
+		
+	if rot_speed_spin:
+		rot_speed_spin.value_changed.connect(func(_val): _on_settings_modified())
+	if bounce_force_spin:
+		bounce_force_spin.value_changed.connect(func(_val): _on_settings_modified())
+	if star_index_spin:
+		star_index_spin.value_changed.connect(func(_val): _on_settings_modified())
+	if key_id_edit:
+		key_id_edit.text_changed.connect(func(_val): _on_settings_modified())
 	if max_points_spin:
 		max_points_spin.value_changed.connect(func(val):
 			var cur_preset = simpl_option.selected if simpl_option else 1
@@ -243,6 +262,9 @@ func get_options() -> Dictionary:
 		"build_mode": build_mode_option.selected if build_mode_option else 0,
 		"preset": preset_option.selected if preset_option else 0,
 		"rotation_speed": rot_speed_spin.value if rot_speed_spin else 45.0,
+		"bounce_force": bounce_force_spin.value if bounce_force_spin else 650.0,
+		"star_index": int(star_index_spin.value) if star_index_spin else 1,
+		"key_id": key_id_edit.text if key_id_edit else "gold",
 		"add_shadow": add_shadow_check.button_pressed if add_shadow_check else true,
 		"anchor_mode": shadow_anchor_option.selected if shadow_anchor_option else 0,
 		"custom_anchor_offset": Vector2(custom_anchor_x_spin.value if custom_anchor_x_spin else 0.0, custom_anchor_y_spin.value if custom_anchor_y_spin else 0.0),

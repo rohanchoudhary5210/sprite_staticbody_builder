@@ -222,6 +222,61 @@ func _create_physics_root(base_name: String, options: Dictionary) -> CollisionOb
 				area.set_script(script)
 			area.add_to_group("goals")
 			root = area
+		4: # Bumper / Spring Pad
+			var area = Area2D.new()
+			area.name = "%sBumper" % base_name
+			var script = load("res://addons/sprite_staticbody_builder/resources/bumper_pad.gd")
+			if script:
+				area.set_script(script)
+				area.set("launch_force", options.get("bounce_force", 650.0))
+			area.add_to_group("bumpers")
+			root = area
+		5: # One-Way Jelly Membrane
+			var body = StaticBody2D.new()
+			body.name = "%sOneWayMembrane" % base_name
+			var script = load("res://addons/sprite_staticbody_builder/resources/one_way_membrane.gd")
+			if script:
+				body.set_script(script)
+			body.add_to_group("one_way_membranes")
+			root = body
+		6: # Teleport Portal
+			var area = Area2D.new()
+			area.name = "%sPortal" % base_name
+			var script = load("res://addons/sprite_staticbody_builder/resources/teleport_portal.gd")
+			if script:
+				area.set_script(script)
+			area.add_to_group("portals")
+			root = area
+		7: # Collectible Star / Gem
+			var star_idx: int = options.get("star_index", 1)
+			var area = Area2D.new()
+			area.name = "%sStar%d" % [base_name, star_idx]
+			var script = load("res://addons/sprite_staticbody_builder/resources/collectible_star.gd")
+			if script:
+				area.set_script(script)
+				area.set("star_index", star_idx)
+			area.add_to_group("collectibles")
+			root = area
+		8: # Key Pickup
+			var area = Area2D.new()
+			var key_id: String = options.get("key_id", "gold")
+			area.name = "%sKey_%s" % [base_name, key_id]
+			var script = load("res://addons/sprite_staticbody_builder/resources/key_item.gd")
+			if script:
+				area.set_script(script)
+				area.set("key_id", key_id)
+			area.add_to_group("keys")
+			root = area
+		9: # Locked Door
+			var body = StaticBody2D.new()
+			var key_id: String = options.get("key_id", "gold")
+			body.name = "%sDoor_%s" % [base_name, key_id]
+			var script = load("res://addons/sprite_staticbody_builder/resources/locked_door.gd")
+			if script:
+				body.set_script(script)
+				body.set("required_key_id", key_id)
+			body.add_to_group("locked_doors")
+			root = body
 		_: # 0: Static Wall / Platform
 			var body = StaticBody2D.new()
 			body.name = "%sBody" % base_name
@@ -328,11 +383,15 @@ func _convert_sprite_to_body(sprite: Sprite2D, options: Dictionary, scene_root: 
 			dock.set_status_message("⚠️ Warning: No solid pixels detected at alpha threshold %.2f." % options.get("alpha_threshold", 0.5), true)
 			
 		var build_mode = CollisionPolygon2D.BUILD_SEGMENTS if options.get("build_mode", 0) == 1 else CollisionPolygon2D.BUILD_SOLIDS
+		var is_one_way = (options.get("preset", 0) == 5)
 		for i in range(polys.size()):
 			var col = CollisionPolygon2D.new()
 			col.name = "CollisionPolygon2D" if i == 0 else "CollisionPolygon2D_%d" % (i + 1)
 			col.polygon = polys[i]
 			col.build_mode = build_mode
+			if is_one_way:
+				col.one_way_collision = true
+				col.one_way_collision_margin = 8.0
 			col_nodes.append(col)
 		
 	# Execute via Undo/Redo with add_do_reference (No free() calls on undo to prevent Redo crashes!)
@@ -461,11 +520,15 @@ func _create_body_from_texture(texture: Texture2D, path: String, options: Dictio
 		if polys.is_empty():
 			dock.set_status_message("⚠️ Warning: No solid pixels detected at alpha threshold %.2f." % options.get("alpha_threshold", 0.5), true)
 		var build_mode = CollisionPolygon2D.BUILD_SEGMENTS if options.get("build_mode", 0) == 1 else CollisionPolygon2D.BUILD_SOLIDS
+		var is_one_way = (options.get("preset", 0) == 5)
 		for i in range(polys.size()):
 			var col = CollisionPolygon2D.new()
 			col.name = "CollisionPolygon2D" if i == 0 else "CollisionPolygon2D_%d" % (i + 1)
 			col.polygon = polys[i]
 			col.build_mode = build_mode
+			if is_one_way:
+				col.one_way_collision = true
+				col.one_way_collision_margin = 8.0
 			col_nodes.append(col)
 		
 	var ur = get_undo_redo()
@@ -553,11 +616,15 @@ func _on_regenerate_collision(options: Dictionary) -> void:
 		
 	var new_col_nodes: Array[CollisionPolygon2D] = []
 	var build_mode = CollisionPolygon2D.BUILD_SEGMENTS if options.get("build_mode", 0) == 1 else CollisionPolygon2D.BUILD_SOLIDS
+	var is_one_way = (options.get("preset", 0) == 5)
 	for i in range(polys.size()):
 		var col = CollisionPolygon2D.new()
 		col.name = "CollisionPolygon2D" if i == 0 else "CollisionPolygon2D_%d" % (i + 1)
 		col.polygon = polys[i]
 		col.build_mode = build_mode
+		if is_one_way:
+			col.one_way_collision = true
+			col.one_way_collision_margin = 8.0
 		new_col_nodes.append(col)
 		
 	var scene_root = EditorInterface.get_edited_scene_root()

@@ -96,12 +96,18 @@ Automatically monitors editor selection without manual dragging:
 
 ### 3. Gameplay Archetypes & Presets
 
-Provides standardized physics configurations across multiple game genres:
+Provides standardized physics and interactive mechanics across multiple game genres:
 
 - 🧱 **Static Wall / Platform**: Standard `StaticBody2D` collision for level geometry, platforms, and boundaries.
-- 🌀 **Rotating Obstacle / Spinner**: Creates an **`AnimatableBody2D`** (with `sync_to_physics = true` and `RotatingObstacle` script in `_physics_process`) ensuring accurate Godot 4 momentum transfer and zero player tunneling. Unlocks an interactive **Rotation Speed (°/s)** spinbox.
-- ⚠️ **Hazard / Trap**: Creates an **`Area2D`** trigger with `HazardArea` attached and registered into the `"hazards"` group with `player_hit` signal and damage callbacks for player character interactions.
-- 🏁 **Goal / Checkpoint**: Creates an **`Area2D`** trigger with `GoalArea` attached and registered into the `"goals"` group with `goal_reached` signal for level-exit triggers and win markers.
+- 🌀 **Rotating Obstacle / Spinner**: Creates an **`AnimatableBody2D`** (with `sync_to_physics = true` and `RotatingObstacle` in `_physics_process`) ensuring accurate Godot 4 momentum transfer and zero tunneling. Unlocks an interactive **Rotation Speed (°/s)** spinbox.
+- ⚠️ **Hazard / Trap**: Creates an **`Area2D`** trigger with `HazardArea` attached and registered into the `"hazards"` group with `player_hit` signal and damage callbacks.
+- 🏁 **Goal / Checkpoint**: Creates an **`Area2D`** trigger with `GoalArea` attached and registered into the `"goals"` group with `goal_reached` signal for level-exit triggers.
+- 🦘 **Bumper / Spring Pad**: Creates an **`Area2D`** with `BumperPad` attached. Launches player slimes in local/normal direction with interactive **Bounce Force (px/s)** spinbox and spring squish tween.
+- 🛡️ **One-Way Jelly Membrane**: Creates a **`StaticBody2D`** with `OneWayMembrane` and automatically configures `one_way_collision = true` on all collision polygons, allowing slimes to pass in one direction while blocking return.
+- 🌀 **Teleport Portal**: Creates an **`Area2D`** with `TeleportPortal` attached. Supports node linking to destination portals with momentum preservation and cooldown protection.
+- ⭐ **Collectible Star / Gem**: Creates an **`Area2D`** with `CollectibleStar` attached. Provides configurable **Star Index (1, 2, 3)**, smooth sine-wave hover bobbing, and pickup celebration pop animations.
+- 🔑 **Key Pickup**: Creates an **`Area2D`** with `KeyItem` attached with customizable **Key ID** tag, registering to player inventory or metadata on contact.
+- 🚪 **Locked Door**: Creates a **`StaticBody2D`** with `LockedDoor` attached. Automatically detects player contact with the matching Key ID, disables collision, and slides/fades open.
 
 ---
 
