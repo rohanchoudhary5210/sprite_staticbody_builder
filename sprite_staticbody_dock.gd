@@ -39,6 +39,11 @@ var _syncing_shadow_controls: bool = false
 @onready var star_index_spin: SpinBox = %StarIndexSpin
 @onready var key_door_box: HBoxContainer = %KeyDoorBox
 @onready var key_id_edit: LineEdit = %KeyIdEdit
+@onready var crumble_box: HBoxContainer = %CrumbleBox
+@onready var collapse_delay_spin: SpinBox = %CollapseDelaySpin
+@onready var respawn_time_spin: SpinBox = %RespawnTimeSpin
+@onready var wind_box: HBoxContainer = %WindBox
+@onready var wind_force_spin: SpinBox = %WindForceSpin
 
 @onready var add_shadow_check: CheckBox = %AddShadowCheck
 @onready var shadow_controls_box: VBoxContainer = %ShadowControlsBox
@@ -98,6 +103,10 @@ func _setup_ui() -> void:
 		preset_option.add_item("⭐ Collectible Star / Gem")
 		preset_option.add_item("🔑 Key Pickup")
 		preset_option.add_item("🚪 Locked Door")
+		preset_option.add_item("💥 Crumbling / Falling Platform")
+		preset_option.add_item("💨 Wind Vent / Air Fan")
+		preset_option.add_item("🔘 Pressure Plate / Switch")
+		preset_option.add_item("🧊 Ice / Slippery Floor")
 		preset_option.select(0)
 
 	# Connect Value syncs
@@ -132,6 +141,8 @@ func _setup_ui() -> void:
 			if bumper_box: bumper_box.visible = (idx == 4)
 			if star_box: star_box.visible = (idx == 7)
 			if key_door_box: key_door_box.visible = (idx == 8 or idx == 9)
+			if crumble_box: crumble_box.visible = (idx == 10)
+			if wind_box: wind_box.visible = (idx == 11)
 			_on_settings_modified()
 		preset_option.item_selected.connect(on_preset_selected)
 		on_preset_selected.call(preset_option.selected)
@@ -144,6 +155,12 @@ func _setup_ui() -> void:
 		star_index_spin.value_changed.connect(func(_val): _on_settings_modified())
 	if key_id_edit:
 		key_id_edit.text_changed.connect(func(_val): _on_settings_modified())
+	if collapse_delay_spin:
+		collapse_delay_spin.value_changed.connect(func(_val): _on_settings_modified())
+	if respawn_time_spin:
+		respawn_time_spin.value_changed.connect(func(_val): _on_settings_modified())
+	if wind_force_spin:
+		wind_force_spin.value_changed.connect(func(_val): _on_settings_modified())
 	if max_points_spin:
 		max_points_spin.value_changed.connect(func(val):
 			var cur_preset = simpl_option.selected if simpl_option else 1
@@ -265,6 +282,9 @@ func get_options() -> Dictionary:
 		"bounce_force": bounce_force_spin.value if bounce_force_spin else 650.0,
 		"star_index": int(star_index_spin.value) if star_index_spin else 1,
 		"key_id": key_id_edit.text if key_id_edit else "gold",
+		"collapse_delay": collapse_delay_spin.value if collapse_delay_spin else 0.8,
+		"respawn_time": respawn_time_spin.value if respawn_time_spin else 3.0,
+		"wind_force": wind_force_spin.value if wind_force_spin else 500.0,
 		"add_shadow": add_shadow_check.button_pressed if add_shadow_check else true,
 		"anchor_mode": shadow_anchor_option.selected if shadow_anchor_option else 0,
 		"custom_anchor_offset": Vector2(custom_anchor_x_spin.value if custom_anchor_x_spin else 0.0, custom_anchor_y_spin.value if custom_anchor_y_spin else 0.0),

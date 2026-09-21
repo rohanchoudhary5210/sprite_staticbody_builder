@@ -279,6 +279,54 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "gold"
 
+[node name="CrumbleBox" type="HBoxContainer" parent="Scroll/MainVBox/PresetSection"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="CrumbleLabel" type="Label" parent="Scroll/MainVBox/PresetSection/CrumbleBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "Collapse / Respawn (s):"
+
+[node name="CollapseDelaySpin" type="SpinBox" parent="Scroll/MainVBox/PresetSection/CrumbleBox"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 0.2
+max_value = 5.0
+step = 0.1
+value = 0.8
+suffix = "s"
+
+[node name="RespawnTimeSpin" type="SpinBox" parent="Scroll/MainVBox/PresetSection/CrumbleBox"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 0.0
+max_value = 15.0
+step = 0.5
+value = 3.0
+suffix = "s"
+
+[node name="WindBox" type="HBoxContainer" parent="Scroll/MainVBox/PresetSection"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="WindLabel" type="Label" parent="Scroll/MainVBox/PresetSection/WindBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "Wind Gust Force (px/s):"
+
+[node name="WindForceSpin" type="SpinBox" parent="Scroll/MainVBox/PresetSection/WindBox"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 50.0
+max_value = 2500.0
+step = 50.0
+value = 500.0
+
 [node name="HSeparator4" type="HSeparator" parent="Scroll/MainVBox"]
 layout_mode = 2
 

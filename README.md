@@ -108,6 +108,10 @@ Provides standardized physics and interactive mechanics across multiple game gen
 - ⭐ **Collectible Star / Gem**: Creates an **`Area2D`** with `CollectibleStar` attached. Provides configurable **Star Index (1, 2, 3)**, smooth sine-wave hover bobbing, and pickup celebration pop animations.
 - 🔑 **Key Pickup**: Creates an **`Area2D`** with `KeyItem` attached with customizable **Key ID** tag, registering to player inventory or metadata on contact.
 - 🚪 **Locked Door**: Creates a **`StaticBody2D`** with `LockedDoor` attached. Automatically detects player contact with the matching Key ID, disables collision, and slides/fades open.
+- 💥 **Crumbling Platform**: Creates an **`AnimatableBody2D`** with `CrumblingPlatform` attached. Features customizable **Collapse Delay** (e.g. `0.6s`) and **Respawn Time** (e.g. `2.5s`), shake-warning animation upon player landing, collision collapse, and smooth regeneration.
+- 💨 **Wind Vent**: Creates an **`Area2D`** with `WindVent` attached. Applies continuous directional acceleration (**Wind Force** default `450 px/s`) along the vent's pointing angle to push floating or jumping slimes.
+- 🔘 **Pressure Plate Switch**: Creates an **`Area2D`** with `PressurePlate` attached. Provides physical depression sink tween and trigger dispatching (`activated`/`deactivated` signals and target method calls) when stepped on.
+- 🧊 **Ice Slippery Floor**: Creates a **`StaticBody2D`** with zero-friction `PhysicsMaterial` (`friction = 0.0`) and `IcePlatform` attached, making slimes slide uncontrollably unless they hit a wall.
 
 ---
 
@@ -199,9 +203,19 @@ addons/sprite_staticbody_builder/
 ├── collision_preview.gd        # Viewport canvas overlay renderer
 └── resources/
     ├── realtime_shadow.gd      # RealtimeShadow2D tool script
-    ├── rotating_obstacle.gd    # Continuous rotation archetype script
-    ├── hazard_area.gd          # Hazard trigger script
-    └── goal_area.gd            # Level exit trigger script
+    ├── rotating_obstacle.gd    # Continuous rotation archetype script (AnimatableBody2D)
+    ├── hazard_area.gd          # Hazard trigger script (Area2D)
+    ├── goal_area.gd            # Level exit trigger script (Area2D)
+    ├── bumper_pad.gd           # Launch/bounce spring pad script (Area2D)
+    ├── one_way_membrane.gd     # One-way directional barrier script (StaticBody2D)
+    ├── teleport_portal.gd      # Momentum-preserving wormhole portal (Area2D)
+    ├── collectible_star.gd     # 3-star rating collectible script (Area2D)
+    ├── key_item.gd             # Key item pickup script (Area2D)
+    ├── locked_door.gd          # Proximity key-unlockable door (StaticBody2D)
+    ├── crumbling_platform.gd   # Step-activated collapse & respawn platform (AnimatableBody2D)
+    ├── wind_vent.gd            # Directional acceleration wind updraft/vent (Area2D)
+    ├── pressure_plate.gd       # Step depression switch & trigger dispatcher (Area2D)
+    └── ice_platform.gd         # Zero-friction slippery floor (StaticBody2D)
 ```
 
 ---

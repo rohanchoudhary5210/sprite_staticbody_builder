@@ -277,6 +277,41 @@ func _create_physics_root(base_name: String, options: Dictionary) -> CollisionOb
 				body.set("required_key_id", key_id)
 			body.add_to_group("locked_doors")
 			root = body
+		10: # Crumbling / Falling Platform
+			var body = AnimatableBody2D.new()
+			body.name = "%sCrumblingPlatform" % base_name
+			var script = load("res://addons/sprite_staticbody_builder/resources/crumbling_platform.gd")
+			if script:
+				body.set_script(script)
+				body.set("collapse_delay", options.get("collapse_delay", 0.8))
+				body.set("respawn_time", options.get("respawn_time", 3.0))
+			body.add_to_group("crumbling_platforms")
+			root = body
+		11: # Wind Vent / Air Fan
+			var area = Area2D.new()
+			area.name = "%sWindVent" % base_name
+			var script = load("res://addons/sprite_staticbody_builder/resources/wind_vent.gd")
+			if script:
+				area.set_script(script)
+				area.set("wind_force", options.get("wind_force", 500.0))
+			area.add_to_group("wind_vents")
+			root = area
+		12: # Pressure Plate / Switch
+			var area = Area2D.new()
+			area.name = "%sPressurePlate" % base_name
+			var script = load("res://addons/sprite_staticbody_builder/resources/pressure_plate.gd")
+			if script:
+				area.set_script(script)
+			area.add_to_group("pressure_plates")
+			root = area
+		13: # Ice / Slippery Floor
+			var body = StaticBody2D.new()
+			body.name = "%sIcePlatform" % base_name
+			var script = load("res://addons/sprite_staticbody_builder/resources/ice_platform.gd")
+			if script:
+				body.set_script(script)
+			body.add_to_group("ice_surfaces")
+			root = body
 		_: # 0: Static Wall / Platform
 			var body = StaticBody2D.new()
 			body.name = "%sBody" % base_name
