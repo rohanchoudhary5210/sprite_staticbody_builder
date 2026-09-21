@@ -263,6 +263,31 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="CustomAnchorBox" type="HBoxContainer" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="CustomAnchorLabel" type="Label" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox/CustomAnchorBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "Custom Anchor (X, Y):"
+
+[node name="CustomAnchorXSpin" type="SpinBox" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox/CustomAnchorBox"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = -500.0
+max_value = 500.0
+value = 0.0
+
+[node name="CustomAnchorYSpin" type="SpinBox" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox/CustomAnchorBox"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = -500.0
+max_value = 500.0
+value = 0.0
+
 [node name="ShadowOffsetBox" type="HBoxContainer" parent="Scroll/MainVBox/ShadowSection/ShadowControlsBox"]
 layout_mode = 2
 

@@ -11,7 +11,7 @@ enum TargetType { NONE, SPRITE, STATIC_BODY, TEXTURE_PATH }
 
 var current_target_type: TargetType = TargetType.NONE
 var target_sprite: Sprite2D = null
-var target_body: StaticBody2D = null
+var target_body: CollisionObject2D = null
 var target_texture_path: String = ""
 var target_texture: Texture2D = null
 var _syncing_shadow_controls: bool = false
@@ -37,6 +37,9 @@ var _syncing_shadow_controls: bool = false
 @onready var add_shadow_check: CheckBox = %AddShadowCheck
 @onready var shadow_controls_box: VBoxContainer = %ShadowControlsBox
 @onready var shadow_anchor_option: OptionButton = %ShadowAnchorOption
+@onready var custom_anchor_box: HBoxContainer = %CustomAnchorBox
+@onready var custom_anchor_x_spin: SpinBox = %CustomAnchorXSpin
+@onready var custom_anchor_y_spin: SpinBox = %CustomAnchorYSpin
 @onready var shadow_offset_x_spin: SpinBox = %ShadowOffsetXSpin
 @onready var shadow_offset_y_spin: SpinBox = %ShadowOffsetYSpin
 @onready var shadow_angle_spin: SpinBox = %ShadowAngleSpin
@@ -123,7 +126,14 @@ func _setup_ui() -> void:
 	if custom_eps_spin:
 		custom_eps_spin.value_changed.connect(func(_val): _on_settings_modified())
 	if max_points_spin:
-		max_points_spin.value_changed.connect(func(_val): _on_settings_modified())
+		max_points_spin.value_changed.connect(func(val):
+			var cur_preset = simpl_option.selected if simpl_option else 1
+			var preset_default = 128 if cur_preset == 0 else (64 if cur_preset == 1 else (32 if cur_preset == 2 else -1))
+			if preset_default > 0 and int(val) != preset_default:
+				simpl_option.select(3) # Switch to Custom
+				if custom_eps_box: custom_eps_box.visible = true
+			_on_settings_modified()
+		)
 	if collision_mode_option:
 		collision_mode_option.item_selected.connect(func(_idx): _on_settings_modified())
 	if build_mode_option:
@@ -148,7 +158,18 @@ func _setup_ui() -> void:
 			shadow_controls_box.visible = add_shadow_check.button_pressed
 
 	if shadow_anchor_option:
-		shadow_anchor_option.item_selected.connect(func(_idx): _on_settings_modified())
+		shadow_anchor_option.item_selected.connect(func(idx):
+			if custom_anchor_box:
+				custom_anchor_box.visible = (idx == 2)
+			_on_settings_modified()
+		)
+		if custom_anchor_box:
+			custom_anchor_box.visible = (shadow_anchor_option.selected == 2)
+
+	if custom_anchor_x_spin:
+		custom_anchor_x_spin.value_changed.connect(func(_val): _on_settings_modified())
+	if custom_anchor_y_spin:
+		custom_anchor_y_spin.value_changed.connect(func(_val): _on_settings_modified())
 
 	var on_offset_changed = func(_val):
 		if _syncing_shadow_controls: return
@@ -224,6 +245,7 @@ func get_options() -> Dictionary:
 		"rotation_speed": rot_speed_spin.value if rot_speed_spin else 45.0,
 		"add_shadow": add_shadow_check.button_pressed if add_shadow_check else true,
 		"anchor_mode": shadow_anchor_option.selected if shadow_anchor_option else 0,
+		"custom_anchor_offset": Vector2(custom_anchor_x_spin.value if custom_anchor_x_spin else 0.0, custom_anchor_y_spin.value if custom_anchor_y_spin else 0.0),
 		"shadow_offset": Vector2(shadow_offset_x_spin.value if shadow_offset_x_spin else 6.0, shadow_offset_y_spin.value if shadow_offset_y_spin else 8.0),
 		"light_angle": shadow_angle_spin.value if shadow_angle_spin else 53.1,
 		"shadow_distance": shadow_dist_spin.value if shadow_dist_spin else 10.0,
@@ -243,7 +265,7 @@ func set_target_sprite(sprite: Sprite2D) -> void:
 	target_texture = sprite.texture if sprite else null
 	_update_target_ui()
 
-func set_target_body(body: StaticBody2D, sprite: Sprite2D) -> void:
+func set_target_body(body: CollisionObject2D, sprite: Sprite2D) -> void:
 	current_target_type = TargetType.STATIC_BODY
 	target_body = body
 	target_sprite = sprite
@@ -261,6 +283,11 @@ func set_target_body(body: StaticBody2D, sprite: Sprite2D) -> void:
 			if add_shadow_check: add_shadow_check.button_pressed = true
 			if "anchor_mode" in found_shadow and shadow_anchor_option:
 				shadow_anchor_option.select(found_shadow.anchor_mode)
+				if custom_anchor_box:
+					custom_anchor_box.visible = (found_shadow.anchor_mode == 2)
+			if "custom_anchor_offset" in found_shadow:
+				if custom_anchor_x_spin: custom_anchor_x_spin.value = found_shadow.custom_anchor_offset.x
+				if custom_anchor_y_spin: custom_anchor_y_spin.value = found_shadow.custom_anchor_offset.y
 			if "shadow_offset" in found_shadow:
 				if shadow_offset_x_spin: shadow_offset_x_spin.value = found_shadow.shadow_offset.x
 				if shadow_offset_y_spin: shadow_offset_y_spin.value = found_shadow.shadow_offset.y

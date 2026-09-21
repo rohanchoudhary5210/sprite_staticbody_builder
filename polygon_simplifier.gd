@@ -26,17 +26,22 @@ static func get_preset_epsilon(preset: int, custom_eps: float = 2.5) -> float:
 			return 2.5
 
 static func get_preset_max_points(preset: int, custom_max: int = 64) -> int:
+	if preset == Preset.CUSTOM:
+		return clampi(custom_max, 4, 512)
+	var preset_default = 64
 	match preset:
 		Preset.LOW:
-			return 128
+			preset_default = 128
 		Preset.MEDIUM:
-			return 64
+			preset_default = 64
 		Preset.HIGH:
-			return 32
-		Preset.CUSTOM:
-			return clampi(custom_max, 4, 512)
+			preset_default = 32
 		_:
-			return 64
+			preset_default = 64
+	if custom_max > 0 and custom_max != preset_default:
+		return clampi(custom_max, 4, 512)
+	return preset_default
+
 
 ## Main entry point to simplify a closed polygon
 static func simplify_polygon(points: PackedVector2Array, epsilon: float, max_points: int = 64) -> PackedVector2Array:

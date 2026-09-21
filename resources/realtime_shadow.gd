@@ -169,6 +169,11 @@ func _find_main_sprite() -> Sprite2D:
     for child in parent.get_children():
         if child is Sprite2D and child != self and not child.name.begins_with("Shadow") and not child.name.ends_with("Shadow"):
             return child
+    # Check 1 level deeper for nested hierarchies (e.g. Visuals/Sprite2D)
+    for child in parent.get_children():
+        for grandchild in child.get_children():
+            if grandchild is Sprite2D and grandchild != self and not grandchild.name.begins_with("Shadow") and not grandchild.name.ends_with("Shadow"):
+                return grandchild
     return null
  
 ## Computes reference origin according to anchor mode (Center, Ground/Bottom, Custom)

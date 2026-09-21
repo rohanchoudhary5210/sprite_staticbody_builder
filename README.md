@@ -98,10 +98,10 @@ Automatically monitors editor selection without manual dragging:
 
 Provides standardized physics configurations across multiple game genres:
 
-- 🧱 **Static Wall / Platform**: Standard static collision for level geometry, platforms, and boundaries.
-- 🌀 **Rotating Obstacle / Spinner**: Attaches a lightweight rotation script (`RotatingObstacle`) that drives continuous angular motion. Unlocks an interactive **Rotation Speed (°/s)** spinbox.
-- ⚠️ **Hazard / Trap**: Automatically registers the body into the engine `"hazards"` group for zero-boilerplate collision detection (`body.is_in_group("hazards")`).
-- 🏁 **Goal / Checkpoint**: Archetype for level-exit triggers and win markers.
+- 🧱 **Static Wall / Platform**: Standard `StaticBody2D` collision for level geometry, platforms, and boundaries.
+- 🌀 **Rotating Obstacle / Spinner**: Creates an **`AnimatableBody2D`** (with `sync_to_physics = true` and `RotatingObstacle` script in `_physics_process`) ensuring accurate Godot 4 momentum transfer and zero player tunneling. Unlocks an interactive **Rotation Speed (°/s)** spinbox.
+- ⚠️ **Hazard / Trap**: Creates an **`Area2D`** trigger with `HazardArea` attached and registered into the `"hazards"` group with `player_hit` signal and damage callbacks for player character interactions.
+- 🏁 **Goal / Checkpoint**: Creates an **`Area2D`** trigger with `GoalArea` attached and registered into the `"goals"` group with `goal_reached` signal for level-exit triggers and win markers.
 
 ---
 
@@ -112,9 +112,10 @@ A standout technical feature of this tool is its **rotation-invariant dynamic sh
 | Setting | Description |
 | :--- | :--- |
 | **Generate Real Shadow Sprite** | Generates an intelligent, dedicated shadow node beneath the main visual sprite. |
-| **Shadow Origin / Anchor** | Sets the geometric anchor point:<br>• **Center (Top-Down)**: Originates from the sprite center (standard for top-down games).<br>• **Bottom / Ground (Floor)**: Anchors to the base/feet of the sprite (standard for platformers and isometric games where shadows cast along the floor).<br>• **Custom Anchor**: Custom pivot point via offset vectors. |
+| **Shadow Origin / Anchor** | Sets the geometric anchor point:<br>• **Center (Top-Down)**: Originates from the sprite center (standard for top-down games).<br>• **Bottom / Ground (Floor)**: Anchors to the base/feet of the sprite (standard for platformers and isometric games where shadows cast along the floor).<br>• **Custom Anchor**: Custom pivot point via dedicated (X, Y) offset spinboxes in the dock. |
+| **Custom Anchor (X, Y)** | Direct pixel translation offset for the custom anchor reference pivot. |
 | **Offset (X, Y)** | Direct pixel translation along Cartesian coordinates. |
-| **Light Angle / Distance** | Alternative polar lighting controls:<br>• **Light Angle (°)**: Circular dial/slider (`0°` = Right, `90°` = Down, `135°` = Down-Right, `180°` = Left).<br>• **Shadow Distance (px)**: Distance cast away from the anchor point.<br>*(Offset X/Y and Angle/Distance are bidirectionally synchronized in real-time).* |
+| **Light Angle / Distance** | Polar lighting controls:<br>• **Light Angle (°)**: Circular dial/slider (`0°` = Right, `90°` = Down, `135°` = Down-Right, `180°` = Left).<br>• **Shadow Distance (px)**: Distance cast away from the anchor point.<br>*(Offset X/Y and Angle/Distance are bidirectionally synchronized in real-time).* |
 | **Shadow Color / Alpha** | ColorPicker with alpha channel support (default: `rgba(0, 0, 0, 0.45)`). |
 | **Shadow Scale** | Uniform scaling multiplier (e.g. `0.9` for perspective height, `1.0` for 1:1 footprint). |
 | **Realtime Rotation Sync** | Attaches `RealtimeShadow2D`. When the parent body or stage rotates, the shadow offset dynamically counter-rotates in real-time, preserving world light direction while matching silhouette orientation. |
@@ -126,19 +127,19 @@ A standout technical feature of this tool is its **rotation-invariant dynamic sh
 
 ### 5. Workflow Options
 
-- **Create StaticBody2D**: Wraps generated nodes under a new `StaticBody2D`. If unchecked, attaches collision nodes directly to the target.
-- **Keep Main Sprite**: Retains and parents the primary visual `Sprite2D` under the body.
-- **Auto-Generate Collision**: Automatically computes contours upon pressing Create.
+- **Create StaticBody2D**: Wraps generated nodes under a new physics body (`StaticBody2D`, `AnimatableBody2D`, or `Area2D` depending on preset). If unchecked, attaches collision nodes and shadows directly to the target sprite/parent.
+- **Keep Main Sprite**: Retains and parents the primary visual `Sprite2D` under the body. If unchecked, removes the visual sprite, leaving an invisible physics/trigger shape.
+- **Auto-Generate Collision**: Automatically computes contours upon pressing Create. If unchecked, only creates the physics body and shadow without collision geometry.
 
 ---
 
 ### 6. Action Buttons & Feedback
 
-- **🔨 Create StaticBody**: Executes the creation pipeline with full Undo/Redo registration.
+- **🔨 Create StaticBody**: Executes the creation pipeline with full `EditorUndoRedoManager` registration (`add_do_reference` memory safety ensuring clean Undo and Redo).
 - **🔄 Regenerate Collision**: Updates collision polygons and shadow parameters on an existing body without disturbing its transform, scripts, or scene hierarchy.
-- **👁️ Live Preview (Toggle)**: Draws semi-transparent green polygons, yellow vertex points, and shadow contours directly on the editor viewport canvas.
-- **🗑️ Remove Collision**: Cleanly strips all `CollisionPolygon2D` children from the target body.
-- **Status Bar**: Real-time diagnostic readouts showing generated polygon count, vertex count, and operation status.
+- **👁️ Live Preview (Toggle)**: Draws semi-transparent green polygons, yellow vertex indicators, and projected shadow contours directly on the editor viewport canvas (supports both scene nodes and standalone FileSystem textures).
+- **🗑️ Remove Collision**: Cleanly strips all `CollisionPolygon2D` children from the target body with full undo capability.
+- **Status Bar & Warnings**: Real-time diagnostic readouts showing generated polygon count and vertex count, with instant warning alerts if an image has 0 opaque pixels or if vertex budgets exceed recommended thresholds (>256 vertices).
 
 ---
 

@@ -10,16 +10,44 @@ static var vertex_outer_color: Color = Color(1.0, 0.95, 0.2, 1.0)
 static var vertex_inner_color: Color = Color(0.1, 0.1, 0.1, 1.0)
 
 ## Draw collision polygons on editor canvas overlay
-static func draw_preview(overlay: Control, target_node: CanvasItem, polygons: Array[PackedVector2Array], options: Dictionary = {}) -> void:
-	if not overlay or not is_instance_valid(target_node) or not target_node.is_inside_tree():
-		return
-	if polygons.is_empty():
+static func draw_preview(overlay: Control, target_node: CanvasItem, polygons: Array[PackedVector2Array], options: Dictionary = {}, preview_texture: Texture2D = null) -> void:
+	if not overlay or polygons.is_empty():
 		return
 		
-	# Compute transform from target local coordinates to editor viewport overlay coordinates
-	var canvas_xform = target_node.get_viewport_transform()
-	var global_xform = target_node.get_global_transform()
+	# Compute transform from local coordinates to editor viewport overlay coordinates
+	var canvas_xform: Transform2D
+	var global_xform: Transform2D
+	var target_sprite: Sprite2D = target_node as Sprite2D if is_instance_valid(target_node) else null
+	var tex: Texture2D = target_sprite.texture if (target_sprite and target_sprite.texture) else preview_texture
+	
+	if is_instance_valid(target_node) and target_node.is_inside_tree():
+		canvas_xform = target_node.get_viewport_transform()
+		global_xform = target_node.get_global_transform()
+	else:
+		# Standalone preview for FileSystem texture centered in active 2D viewport
+		var vp = EditorInterface.get_editor_viewport_2d()
+		if vp:
+			canvas_xform = vp.global_canvas_transform
+			var center = vp.get_visible_rect().get_center()
+			var world_pos = canvas_xform.affine_inverse() * center
+			global_xform = Transform2D(0.0, world_pos)
+		else:
+			canvas_xform = overlay.get_viewport_transform()
+			global_xform = Transform2D(0.0, overlay.size * 0.5)
+			
 	var xform = canvas_xform * global_xform
+	
+	# Draw subtle ghost texture preview if target_node is not in scene
+	if (not is_instance_valid(target_node) or not target_node.is_inside_tree()) and tex:
+		var tex_w = float(tex.get_width())
+		var tex_h = float(tex.get_height())
+		var tex_rect_pts = PackedVector2Array([
+			xform * Vector2(-tex_w * 0.5, -tex_h * 0.5),
+			xform * Vector2(tex_w * 0.5, -tex_h * 0.5),
+			xform * Vector2(tex_w * 0.5, tex_h * 0.5),
+			xform * Vector2(-tex_w * 0.5, tex_h * 0.5)
+		])
+		overlay.draw_colored_polygon(tex_rect_pts, Color(0.2, 0.4, 0.6, 0.15))
 	
 	# Draw Shadow Preview if enabled in options
 	if options.get("add_shadow", false):
@@ -27,12 +55,16 @@ static func draw_preview(overlay: Control, target_node: CanvasItem, polygons: Ar
 		var shadow_scale: float = options.get("shadow_scale", 1.0)
 		var shadow_col: Color = options.get("shadow_color", Color(0, 0, 0, 0.4))
 		var realtime: bool = options.get("realtime_shadow", true)
-		
 		var anchor_mode: int = options.get("anchor_mode", 0)
+		var custom_anchor_off: Vector2 = options.get("custom_anchor_offset", Vector2.ZERO)
+		
 		var anchor_disp: Vector2 = Vector2.ZERO
-		if anchor_mode == 1 and target_node is Sprite2D and target_node.texture:
-			var half_h: float = (target_node.texture.get_height() * 0.5) if target_node.centered else float(target_node.texture.get_height())
-			anchor_disp = xform.basis_xform(Vector2(0, half_h))
+		if anchor_mode == 1 and tex:
+			var is_centered = target_sprite.centered if target_sprite else true
+			var half_h: float = (tex.get_height() * 0.5) if is_centered else float(tex.get_height())
+			anchor_disp = xform.basis_xform(Vector2(0, half_h) + custom_anchor_off)
+		elif anchor_mode == 2 and custom_anchor_off != Vector2.ZERO:
+			anchor_disp = xform.basis_xform(custom_anchor_off)
 		
 		# Compute screen-space shadow offset
 		var screen_shadow_offset: Vector2
